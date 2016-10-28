@@ -1,0 +1,27 @@
+#alias {^INITIALIZE_SETTINGS$}
+{
+    #format {name} {%l} {$MSDP_NAME};
+    #variable {gameDataPath} {${HOME}/$name};
+    #variable {historyPath} {${HOME}/$name\.history};
+    #replace {historyPath} {\\} {};
+    #script {if ! [ -f "$gameDataPath" ] ; then echo -e "#variable {channelBufferIndex} {0}\n#variable {beeps} {true}" > "$gameDataPath";fi;if [ -f "$historyPath" ] ; then echo "#history {read} {$historyPath}";fi};
+    #class {gameData} {read} {$gameDataPath};
+    #if {"$autocspam" == "true"}
+    {
+        cspam
+    };
+    #class {gameData} {open};
+#ticker {autosave} {qcsave} {10};
+#TICKER           {historyWriter}  {#if {&{historyPath}} {#history {write} {$historyPath}}}                        {5}
+}
+{9}
+
+#ALIAS {^{c|qc}save$}
+{
+	#class {gameData} {write} {$gameDataPath};
+	#if {"%0" == "csave"}
+	{
+		#showme {saving game data for $MSDP_NAME\.}
+	}
+}
+{9}

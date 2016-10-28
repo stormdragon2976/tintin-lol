@@ -1,0 +1,156 @@
+#ACTION {^{silent_MSP|MSP} mode is {already|now} {dis|en}abled.$}
+{
+	#nop {Because one action handles this, we need to check for en or dis. En is enabled, dis is disabled.};
+	#if {"%3" == "en"}
+	{
+		#variable {msp} {true}
+	};
+	#else
+	{
+		#variable {msp} {false}
+	}
+}
+{9}
+
+#ALIAS {^news$}
+{
+	#if {$motdStatus != 200 && $motdStatus != 404}
+	{
+		#script {motd} {curl -I "$MOTDURL"};
+		#regexp {${motd[1]}} {HTTP/1.1 {.*} {.*}} {#variable {motdStatus} {&1}}
+	};
+	#if {$motdStatus == 200}
+	{
+		#system {play -qV0 -t ogg "$MOTDURL" gain $volume &> /dev/null &}
+	};
+	#else
+	{
+		#echo {There is no news currently.}
+	}
+}
+{9}
+
+#ALIAS {^synth_play %1}
+{
+	#if {"$msp" == "true" && &{%1}}
+	{
+		#system {play -qV0 $%1 gain $volume &> /dev/null&}
+	}
+}
+{9}
+
+#ALIAS {pan_play %S}
+{
+	#if {!&{play_%1} && "$msp" == "true"}
+	{
+		#variable {play_%1} {false};
+		#script {soundFileName} {$shuf -n 1 -e sounds/%1*};
+		#math {lChannel} {1d5+4};
+		#math {rChannel} {1d5+4};
+		#variable {soundFileName} {${soundFileName[1]}};
+		#system {play -qV0 "$HOME/$soundFileName" gain $volume remix - v0.$lChannel v0.$rChannel &> /dev/null &};
+		#script {i} {soxi "$HOME/$soundFileName" | grep Duration | cut -d ':' -f2- | cut -d '=' -f1 | tr -d "[:space:]"};
+		#variable {i} {${i[1]}};
+		#delay {$i}  {#unvariable {play_%1}}
+	}
+}
+{9}
+
+#ALIAS {play %1 %2}
+{
+	#if {"$msp" == "true"}
+	{
+		#system {play -qV0 -mix "$($shuf -n 1 -e $HOME/sounds/%1*)" "$($shuf -n 1 -e $HOME/sounds/%2*)" gain $volume &> /dev/null &}
+	}
+}
+{9}
+
+#ALIAS {^play_norandom %S$}
+{
+	#if {"$msp" == "true"}
+	{
+		#system {play -qV0 "$HOME/sounds/%1" gain $volume &> /dev/null &}
+	}
+}
+{8}
+
+#ALIAS {seq_{play|play_norandom} %S}
+{
+	#if {!&{play_%1} && "$msp" == "true"}
+	{
+		#variable {play_%1} {false};
+		#if {"%1" == "play"}
+		{
+			#script {soundFileName} {$shuf -n 1 -e $HOME/sounds/%2*};
+			#variable {soundFileName} {${soundFileName[1]}}
+		};
+		#else
+		{
+			#variable {soundFileNamei} {$HOME/sounds/%2.*}
+		};
+		#system {play -qV0 "$soundFileName" gain $volume &> /dev/null &};
+		#script {i} {soxi "$soundFileName" | grep Duration | cut -d ':' -f2- | cut -d '=' -f1 | tr -d "[:space:]"};
+		#variable {i} {${i[1]}};
+		#delay {$i}  {#unvariable {play_%1}}
+	}
+}
+{9}
+
+#ALIAS {{lplay|rplay|play|rev_play} %S}
+{
+	#if {"$msp" == "true"}
+	{
+		#if {"%1" == "lplay"}
+		{
+			#variable {lChannel} {v0.9};
+			#variable {rChannel} {v0.4};
+			#system {play -qV0 "$($shuf -n 1 -e $HOME/sounds/%2*)" remix $lChannel $rChannel gain $volume &> /dev/null &}
+		};
+		#elseif {"%1" == "rplay"}
+		{
+			#variable {lChannel} {v0.4};
+			#variable {rChannel} {v0.9};
+			#system {play -qV0 "$($shuf -n 1 -e $HOME/sounds/%2*)" remix $lChannel $rChannel gain $volume &> /dev/null &}
+		};
+		#elseif {"%1" == "rev_play"}
+		{
+			#system {play -qV0 "$($shuf -n 1 -e $HOME/sounds/%2*)" reverse gain $volume &> /dev/null &}
+		};
+		#else
+		{
+			#system {play -qV0 "$($shuf -n 1 -e $HOME/sounds/%2*)" gain $volume &> /dev/null &}
+		}
+	}
+}
+{9}
+
+#GAG              {^!!SOUND%*}
+#MACRO {\e>}
+{
+	#if {$volume <= -40}
+	{
+		#variable {volume} {-40}
+	};
+	#else
+	{
+		#math {volume} {$volume - 2}
+	};
+	synth_play newVolumeSound
+}
+
+#MACRO {\e?}
+{
+	#if {$volume >= 0}
+	{
+		#variable {volume} {0}
+	};
+	#else
+	{
+		#math {volume} {$volume + 2}
+	};
+	synth_play newVolumeSound
+}
+
+#VARIABLE         {msp}  {true}
+#VARIABLE         {versionFormatString}  {}
+#VARIABLE         {volume}  {0}

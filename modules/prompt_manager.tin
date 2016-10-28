@@ -1,0 +1,200 @@
+#ACTION {^[%d exp] <%dhp %dm %dmv %dbl>}
+{
+	#variable {currentExperience} {%1};
+	#variable {currentHitpoints} {%2};
+	#variable {currentMana} {%3};
+	#variable {currentMove} {%4};
+	#variable {currentBlood} {%5}
+}
+{9}
+
+#ACTION {^[%d exp] <%dhp %dm %dmv>}
+{
+	#variable {currentExperience} {%1};
+	#variable {currentHitpoints} {%2};
+	#variable {currentMana} {%3};
+	#variable {currentMove} {%4}
+}
+{9}
+
+#ACTION {^[%d/%d] [%d/%d] <%dhp %dm %dmv %dbl>}
+{
+	#variable {currentHitpoints} {%5};
+	#variable {currentMana} {%6};
+	#variable {currentMove} {%7};
+	#variable {currentBlood} {%8};
+	#if {%1 >= 90}
+	{
+		#math {enemyConditionTone} {%1 + 400}
+	};
+	#elseif {%1 >= 80}
+	{
+		#math {enemyConditionTone} {%1 + 380}
+	};
+	#elseif {%1 >= 70}
+	{
+		#math {enemyConditionTone} {%1 + 360}
+	};
+	#elseif {%1 >= 60}
+	{
+		#math {enemyConditionTone} {%1 + 340}
+	};
+	#elseif {%1 >= 50}
+	{
+		#math {enemyConditionTone} {%1 + 320}
+	};
+	#elseif {%1 >= 40}
+	{
+		#math {enemyConditionTone} {%1 + 300}
+	};
+	#elseif {%1 >= 30}
+	{
+		#math {enemyConditionTone} {%1 + 280}
+	};
+	#elseif {%1 >= 20}
+	{
+		#math {enemyConditionTone} {%1 + 260}
+	};
+	#elseif {%1 >= 10}
+	{
+		#math {enemyConditionTone} {%1 + 240}
+	};
+	#else
+	{
+		#math {enemyConditionTone} {%1 + 220}
+	};
+	#system {play -q -V0 -n synth 0.06 tri $enemyConditionTone fade 0.01 0.06 gain $volume &> /dev/null &};
+	#if {%3 >= 75}
+	{
+		#variable {lastHpAlert} {}
+	};
+	#if {%3 < 75 && %3 > 50 && "$lastHpAlert" != "qf"}
+	{
+		#variable {lastHpAlert} {qf};
+		#system {play -qn -V0 synth tri D5 tri F5 tri G#5 tri A5 tri C6 remix - fade 0 5.5 5 gain $volume &> /dev/null &}
+	};
+	#elseif {%3 <= 50 && %3 > 25 && "$lastHpAlert" != "bn"}
+	{
+		#variable {lastHpAlert} {bn};
+		#system {play -qn -V0 synth tri C#3 tri E3 tri A3 remix - fade 0 5.5 5 gain $volume &> /dev/null &}
+	};
+	#elseif {%3 <= 25 && %3 > 10 && "$lastHpAlert" != "ph"}
+	{
+		#variable {lastHpAlert} {ph};
+		#system {play -qn -V0 synth sq C#5 sq D#5 sq F#5 sq A5 sq C#6 remix - fade 0 5.5 5 gain $volume &> /dev/null &}
+	};
+	#elseif {%3 <= 10 && "$lastHpAlert" != "awful"}
+	{
+		#variable {lastHpAlert} {awful};
+		#system {play -qn -V0 synth sq D#3 sq B3 sq C#4 sq F4 sq A4 remix - fade 0 5.5 5 gain $volume &> /dev/null &}
+	}
+}
+{9}
+
+#ACTION {^[%d/%d] [%d/%d]<%dhp %dm %dmv>}
+{
+	#variable {currentHitpoints} {%5};
+	#variable {currentMana} {%6};
+	#variable {currentMove} {%7};
+	#if {%1 >= 90}
+	{
+		#math {enemyConditionTone} {%1 + 400}
+	};
+	#elseif {%1 >= 80}
+	{
+		#math {enemyConditionTone} {%1 + 380}
+	};
+	#elseif {%1 >= 70}
+	{
+		#math {enemyConditionTone} {%1 + 360}
+	};
+	#elseif {%1 >= 60}
+	{
+		#math {enemyConditionTone} {%1 + 340}
+	};
+	#elseif {%1 >= 50}
+	{
+		#math {enemyConditionTone} {%1 + 320}
+	};
+	#elseif {%1 >= 40}
+	{
+		#math {enemyConditionTone} {%1 + 300}
+	};
+	#elseif {%1 >= 30}
+	{
+		#math {enemyConditionTone} {%1 + 280}
+	};
+	#elseif {%1 >= 20}
+	{
+		#math {enemyConditionTone} {%1 + 260}
+	};
+	#elseif {%1 >= 10}
+	{
+		#math {enemyConditionTone} {%1 + 240}
+	};
+	#else
+	{
+		#math {enemyConditionTone} {%1 + 220}
+	};
+	#system {play -q -V0 -n synth 0.06 tri $enemyConditionTone fade 0.01 0.06 gain $volume &> /dev/null &};
+	#if {%3 >= 75}
+	{
+		#variable {lastHpAlert} {}
+	};
+	#if {%3 < 75 && %3 > 50 && "$lastHpAlert" != "qf"}
+	{
+		#variable {lastHpAlert} {qf};
+		#system {play -qn -V0 synth tri D5 tri F5 tri G#5 tri A5 tri C6 remix - fade 0 5.5 5 gain $volume &> /dev/null &}
+	};
+	#elseif {%3 <= 50 && %3 > 25 && "$lastHpAlert" != "bn"}
+	{
+		#variable {lastHpAlert} {bn};
+		#system {play -qn -V0 synth tri C#3 tri E3 tri A3 remix - fade 0 5.5 5 gain $volume &> /dev/null &}
+	};
+	#elseif {%3 <= 25 && %3 > 10 && "$lastHpAlert" != "ph"}
+	{
+		#variable {lastHpAlert} {ph};
+		#system {play -qn -V0 synth sq C#5 sq D#5 sq F#5 sq A5 sq C#6 remix - fade 0 5.5 5 gain $volume &> /dev/null &}
+	};
+	#elseif {%3 <= 10 && "$lastHpAlert" != "awful"}
+	{
+		#variable {lastHpAlert} {awful};
+		#system {play -qn -V0 synth sq D#3 sq B3 sq C#4 sq F4 sq A4 remix - fade 0 5.5 5 gain $volume &> /dev/null &}
+	}
+}
+{9}
+
+#ALIAS {^hp$}
+{
+	#showme {You have $currentHitpoints hitpoints.}
+}
+{9}
+
+#ALIAS {^mv$}
+{
+	#showme {You have $currentMove movement.}
+}
+{9}
+
+#ALIAS {^{blo|bloo|blood}$}
+{
+	#showme {You have $currentBlood blood.}
+}
+{9}
+
+#ALIAS {^{exp|expe|exper|experi|experie|experien|experienc|experience}$}
+{
+	#showme {You have $currentExperience experience points.}
+}
+{9}
+
+#ALIAS {^{mn|mana}$}
+{
+	#showme {You have $currentMana mana.}
+}
+{9}
+
+#GAG              {^[%d exp] <%dhp %dm %dmv %dbl>}
+#GAG              {^[%d exp] <%dhp %dm %dmv>}
+#GAG              {^[%d/%d] [%d/%d] <%dhp %dm %dmv %dbl>}
+#GAG              {^[%d/%d] [%d/%d]<%dhp %dm %dmv>}

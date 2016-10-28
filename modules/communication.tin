@@ -1,0 +1,284 @@
+#ACTION {^%S {$communicationChannels}%3'%4'.$}
+{
+	#if {"%2" == "{asks|ask|exclaims|exclaim|frowns|frown|grins|grin|says|say}"}
+	{
+		#list {say} {insert} {1} {%0};
+		#list {say} {size} {i};
+		#if {$i >= 11}
+		{
+			#list {say} {delete} {11}
+		}
+	};
+	#if {"%2" == "{chats|chat}"}
+	{
+		#list {chat} {insert} {1} {%0};
+		#list {chat} {size} {i};
+		#if {$i >= 11}
+		{
+			#list {chat} {delete} {11}
+		}
+	};
+	#if {"%2" == "{musics|music}"}
+	{
+		#list {music} {insert} {1} {%0};
+		#list {music} {size} {i};
+		#if {$i >= 11}
+		{
+			#list {music} {delete} {11}
+		}
+	};
+	#if {"%2" == "{newbies|newbie}"}
+	{
+		#list {newbie} {insert} {1} {%0};
+		#list {newbie} {size} {i};
+		#if {$i >= 11}
+		{
+			#list {newbie} {delete} {11}
+		}
+	};
+	#if {"%2" == "{tells|tell}"}
+	{
+		#list {tell} {insert} {1} {%0};
+		#list {tell} {size} {i};
+		#if {$i >= 11}
+		{
+			#list {tell} {delete} {11}
+		}
+	};
+	#if {"%2" == "tells the group"}
+	{
+		#list {grouptell} {insert} {1} {%0};
+		#list {grouptell} {size} {i};
+		#if {$i >= 11}
+		{
+			#list {grouptell} {delete} {11}
+		}
+	};
+	#list {all} {insert} {1} {%0};
+	#list {all} {size} {i};
+	#if {$i >= 11}
+	{
+		#list {all} {delete} {11}
+	};
+	synth_play $msgSound
+}
+{9}
+
+#ACTION {^Log{in|out} -> %2}
+{
+	synth_play $log%1Sound;
+	#list {event} {insert} {1} {%0};
+	#list {event} {size} {i};
+	#if {$i >= 11}
+	{
+		#list {event} {delete} {11}
+	}
+}
+{9}
+
+#ACTION {^You are now%1}
+{
+	synth_play $eventSound;
+	#list {event} {insert} {1} {%0};
+	#list {event} {size} {i};
+	#if {$i >= 11}
+	{
+		#list {event} {delete} {11}
+	}
+}
+{9}
+
+#ACTION {^[{Ventrue|Gangrel|Tremere|Toreador|Brujah|Malkavian|Nosferatu}]:<%S> %3}
+{
+	#list {clantell} {insert} {1} {%0};
+	#list {clantell} {size} {i};
+	#if {$i >= 11}
+	{
+		#list {clantell} {delete} {11}
+	};
+	#list {all} {insert} {1} {%0};
+	#list {all} {size} {i};
+	#if {$i >= 11}
+	{
+		#list {all} {delete} {11}
+	};
+	synth_play $msgSound
+}
+{9}
+
+#ALIAS {display_channel %S %d}
+{
+	#list {%1} {size} {i};
+	#if {%2 <= $i}
+	{
+		#echo {${%1[%2]}}
+	}
+}
+{9}
+
+#MACRO {\e-}
+{
+	#if {$channelBufferIndex <= 0}
+	{
+		#variable {channelBufferIndex} {0}
+	};
+	#else
+	{
+		#math {channelBufferIndex} {$channelBufferIndex - 1}
+	};
+	#switch {$channelBufferIndex}
+	{
+		#case {0}
+		{
+			#variable {channelName} {all}
+		};
+		#case {1}
+		{
+			#variable {channelName} {chat}
+		};
+		#case {2}
+		{
+			#variable {channelName} {clantell}
+		};
+		#case {3}
+		{
+			#variable {channelName} {event}
+		};
+		#case {4}
+		{
+			#variable {channelName} {grouptell}
+		};
+		#case {5}
+		{
+			#variable {channelName} {music}
+		};
+		#case {6}
+		{
+			#variable {channelName} {newbie}
+		};
+		#case {7}
+		{
+			#variable {channelName} {say}
+		};
+		#case {8}
+		{
+			#variable {channelName} {tell}
+		}
+	};
+	#showme {Channel buffer set to $channelName}
+}
+
+#MACRO {\e0}
+{
+	display_channel $channelName 10
+}
+
+#MACRO {\e1}
+{
+	display_channel $channelName 1
+}
+
+#MACRO {\e2}
+{
+	display_channel $channelName 2
+}
+
+#MACRO {\e3}
+{
+	display_channel $channelName 3
+}
+
+#MACRO {\e4}
+{
+	display_channel $channelName 4
+}
+
+#MACRO {\e5}
+{
+	display_channel $channelName 5
+}
+
+#MACRO {\e6}
+{
+	display_channel $channelName 6
+}
+
+#MACRO {\e7}
+{
+	display_channel $channelName 7
+}
+
+#MACRO {\e8}
+{
+	display_channel $channelName 8
+}
+
+#MACRO {\e9}
+{
+	display_channel $channelName 9
+}
+
+#MACRO {\e=}
+{
+	#if {$channelBufferIndex >= 8}
+	{
+		#variable {channelBufferIndex} {8}
+	};
+	#else
+	{
+		#math {channelBufferIndex} {$channelBufferIndex + 1}
+	};
+	#switch {$channelBufferIndex}
+	{
+		#case {0}
+		{
+			#variable {channelName} {all}
+		};
+		#case {1}
+		{
+			#variable {channelName} {chat}
+		};
+		#case {2}
+		{
+			#variable {channelName} {clantell}
+		};
+		#case {3}
+		{
+			#variable {channelName} {event}
+		};
+		#case {4}
+		{
+			#variable {channelName} {grouptell}
+		};
+		#case {5}
+		{
+			#variable {channelName} {music}
+		};
+		#case {6}
+		{
+			#variable {channelName} {newbie}
+		};
+		#case {7}
+		{
+			#variable {channelName} {say}
+		};
+		#case {8}
+		{
+			#variable {channelName} {tell}
+		}
+	};
+	#showme {Channel buffer set to $channelName}
+}
+
+#VARIABLE         {all}  {}
+#VARIABLE         {channelBufferIndex}  {0}
+#VARIABLE         {channelName}  {all}
+#VARIABLE         {chat}  {}
+#VARIABLE         {clantell}  {}
+#VARIABLE         {communicationChannels}   {asks|ask|chat|chats|exclaim|exclaims|frown|frowns|grin|grins|musics|music|newbies|newbie|states|state|tells|tell|tells the group|says|say}
+#VARIABLE         {event}  {}
+#VARIABLE         {grouptell}  {}
+#VARIABLE         {music}  {}
+#VARIABLE         {newbie}  {}
+#VARIABLE         {say}  {}
+#VARIABLE         {tell}  {}

@@ -1,0 +1,92 @@
+#ACTION {^The %1 {are|is} closed.}
+{
+	open $lastDirection
+}
+{9}
+
+#MACRO {\e,}
+{
+	#variable {closeDirection} {north};
+	#variable {lastDirection} {south};
+	#script {shuf -n 1 -e s sou sout south}
+}
+
+#MACRO {\e.}
+{
+	close $closeDirection
+}
+
+#MACRO {\e<}
+{
+	scan south
+}
+
+#MACRO {\eI}
+{
+	scan north
+}
+
+#MACRO {\eJ}
+{
+	scan west
+}
+
+#MACRO {\eL}
+{
+	scan east
+}
+
+#MACRO {\e>}
+{
+	scan down
+}
+
+#MACRO {\eO}
+{
+	scan up
+}
+
+#MACRO {\ei}
+{
+	#variable {closeDirection} {south};
+	#variable {lastDirection} {north};
+	#script {shuf -n 1 -e n no nor nort north}
+}
+
+#MACRO {\ej}
+{
+	#variable {closeDirection} {east};
+	#variable {lastDirection} {west};
+	#script {shuf -n 1 -e w we wes west}
+}
+
+#MACRO {\eK}
+{
+	scan
+}
+
+#MACRO {\el}
+{
+	#variable {closeDirection} {west};
+	#variable {lastDirection} {east};
+	#script {shuf -n 1 -e e ea eas east}
+}
+
+#MACRO {\em}
+{
+	#variable {closeDirection} {up};
+	#variable {lastDirection} {down};
+	#script {shuf -n 1 -e d do dow down}
+}
+
+#MACRO {\eo}
+{
+	open $lastDirection
+}
+
+#MACRO {\eu}
+{
+	#variable {closeDirection} {down};
+	#variable {lastDirection} {up};
+	#script {shuf -n 1 -e u up}
+}

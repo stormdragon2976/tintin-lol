@@ -1,4 +1,4 @@
-#VARIABLE         {MOTDURL}  {https://stormdragon.tk/scripts/motd.ogg}
-#VARIABLE         {mudAddress}  {mtserver.mwtd.net}
-#VARIABLE         {mudPort}  {3456}
-#VARIABLE         {mudSessionName}  {Test MUD}
+#VARIABLE         {MOTDURL}  {https://stormdragon.tk/scripts/lolmotd.ogg}
+#VARIABLE         {mudAddress}  {play.lolmud.net}
+#VARIABLE         {mudPort}  {5685}
+#VARIABLE         {mudSessionName}  {Legends of the Lost}
